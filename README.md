@@ -10,8 +10,6 @@
 
 `$ pip install statcode`
 
-Requires Python 3.0 or higher.
-
 ## Contributing
 
 This was something I put together on a plane ride, but I intent to turn this project into a go-to manual for everything related to HTTP. For example, it should soon be possible to look up different [request headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers), i.e. running `$ statcode cache-control` and getting "Specifies directives for caching mechanisms in both requests and responses." If you'd like to be a part of that, feel free to make a contribution – just fork the repo, make your changes and then submit a pull request. If you do contribute, please try to adhere to the existing style.
