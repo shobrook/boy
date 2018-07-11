@@ -161,14 +161,26 @@
                 request, a POST must be used in the second request."
 
 308:
-  message: "Permanent Redirect"
+  message: "Permanent Redirect / Resume Incomplete"
   category: "Redirection Messages"
-  description: "This means that the resource is now permanently located at another \
+  description: "Permanent Redirect
+                This means that the resource is now permanently located at another \
                 URI, specified by the Location: HTTP Response header. This has \
                 the same semantics as the 301 Moved Permanently HTTP response \
                 code, with the exception that the user agent must not change the \
                 HTTP method used: If a POST was used in the first request, a POST \
-                must be used in the second request."
+                must be used in the second request.
+                
+                Resume Incomplete
+                This code indicates to the client that the server does not posses the\
+                complete byte range for the resume request to proceed but is still\
+                willing to continue the operation.
+                It may include a Range header so that the client may minimize the amount\
+                of data that needs to be retransmitted by the ensuing resume requests.\
+                In the absence of any such Range header, the client should assume that\
+                the server has no stored bytes.
+                It may include a Location header indicating the URI to which future\
+                resumable requests should be sent for this operation."
 
 # Client Error Responses
 
