@@ -1,3 +1,4 @@
+# coding: utf-8
 #########
 # GLOBALS
 #########
@@ -305,7 +306,9 @@ def print_all():
 
 
 def main():
-    if (len(sys.argv) == 1 and not sys.argv[1] in ("-l", "--list")) or sys.argv[1].lower() in ("-h", "--help"):
+    if len(sys.argv) == 1:
+        print_help()
+    elif sys.argv[1].lower() in ("-h", "--help"):
         print_help()
     elif sys.argv[1].lower() in ("-l", "--list"):
         content = print_all()
