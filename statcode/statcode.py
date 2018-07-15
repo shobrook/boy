@@ -1,3 +1,4 @@
+# coding: utf-8
 #########
 # GLOBALS
 #########
@@ -233,18 +234,45 @@ class Scrollable(urwid.WidgetDecoration):
 
 
 class App(object):
-    def __init__(self, content):
-        self._palette = [
-            ("menu", "black", "light cyan", "standout"),
-            ("title", "default,bold", "default", "bold")
-        ]
+    def __init__(self, content, all=None):
+        if all:
+            content = self._list()
 
-        menu = urwid.Text([u'\n', ("menu", u" Q "), ("light gray", u" Quit")]) # TODO: Make like man pages (vim input)
-        layout = urwid.Frame(body=content, footer=menu)
+        if content:
+            self._palette = [
+                ("menu", "black", "light cyan", "standout"),
+                ("title", "default,bold", "default", "bold")
+            ]
 
-        main_loop = urwid.MainLoop(layout, self._palette, unhandled_input=self._handle_input)
-        main_loop.run()
+            menu = urwid.Text([u'\n', ("menu", u" Q "), ("light gray", u" Quit")]) # TODO: Make like man pages (vim input)
+            layout = urwid.Frame(body=content, footer=menu)
 
+            main_loop = urwid.MainLoop(layout, self._palette, unhandled_input=self._handle_input)
+            main_loop.run()
+        else:
+            print_help()
+
+    def _list(self):
+        '''Creates padding for ALL status codes'''
+        try:
+            pile_data = []
+            for status_code, content in CODE_DESCRIPTIONS.items():
+                pile_data.append([
+                    urwid.Text("STATCODE: The Manual for HTTP Status Codes\n", align="center"),
+                    urwid.Text(("title", "STATUS MESSAGE")),
+                    urwid.Padding(urwid.Text(''.join([str(status_code), ": ", content["message"], '\n'])), left=5),
+                    urwid.Text(("title", "CATEGORY")),
+                    urwid.Padding(urwid.Text(''.join([content["category"], '\n'])), left=5),
+                    urwid.Text(("title", "DESCRIPTION")),
+                    urwid.Padding(urwid.Text(content["description"]), left=5)
+                ])
+
+
+            pile = urwid.Pile([item for sublist in pile_data for item in sublist])
+            padding = urwid.Padding(Scrollable(pile), left=1, right=1)
+            return padding
+        except:
+            return None
 
     def _handle_input(self, input):
         if input in ('q', 'Q'):
@@ -289,8 +317,12 @@ def print_help():
 
 
 def main():
-    if len(sys.argv) == 1 or sys.argv[1].lower() in ("-h", "--help"):
+    if len(sys.argv) == 1:
         print_help()
+    elif sys.argv[1].lower() in ("-h", "--help"):
+        print_help()
+    elif sys.argv[1].lower() in ("-l", "--list"):
+        App(None, all=True)
     else:
         status_code = sys.argv[1]
         content = generate_content(status_code)
