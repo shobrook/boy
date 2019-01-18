@@ -295,7 +295,7 @@ def get_yaml_dictionary(status_code):
     return code_descriptions, num, status_code
 
 def print_help():
-    print(''.join([BOLD, "statcode v1.0.0 – Made by @shobrook", END, '\n']))
+    print(''.join([BOLD, "statcode v2.0.0 – Made by @shobrook", END, '\n']))
     print("Like man pages, but for HTTP status codes.\n")
     print(''.join([UNDERLINE, "Usage:", END, " $ statcode ", YELLOW, "status_code", END]))
     print(''.join([BOLD, "-h, --help:", END, " prints this help"]))
