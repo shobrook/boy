@@ -279,7 +279,7 @@ def generate_content(status_code):
         padding = urwid.Padding(Scrollable(pile), left=1, right=1)
 
         return padding
-    except (KeyError):  # None is used to print "not recognized", so KeyError. Other errors have nothing to do with it
+    except KeyError:  # None is used to print "not recognized", so KeyError. Other errors have nothing to do with it
         return None
 
 def __load_file_data(num):
