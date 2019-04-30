@@ -250,7 +250,11 @@ def output_without_ui(content):
 def generate_content(status_code):
     try:
         code_descriptions, num, status_code = get_yaml_dictionary(status_code)
-        content = code_descriptions[status_code]
+        if type(status_code) is not int:
+            # Do a case insensitive key comparison for HTTP header values
+            content = [code_descriptions[key] for key in code_descriptions if key.lower() == status_code.lower()][0]
+        else:
+            content = code_descriptions[status_code]
         pile = urwid.Pile([
             urwid.Text("STATCODE: The Manual for HTTP Status Codes and Headers\n", align="center"),
             urwid.Text(("title", "STATUS MESSAGE" if num else "HEADER INFO")),

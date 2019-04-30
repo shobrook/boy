@@ -20,6 +20,6 @@ You can install the [`statcode`](https://aur.archlinux.org/packages/statcode/) p
 
 ## Contributing
 
-This is a pretty small project (something I put together on a plane ride), but with enough help it could turn into a go-to manual for everything HTTP-related. For example, it should be possible to look up different [request headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers), e.g. running `$ statcode cache-control` and getting "Specifies directives for caching mechanisms in both requests and responses." If you'd like to help make this happen, feel free to fork the repo and contribute. 
+This is a pretty small project (something I put together on a plane ride), but with enough help it could turn into a go-to manual for everything HTTP-related. If you'd like to help make this happen, feel free to fork the repo and contribute.
 
 If you've discovered a bug or have a feature request, create an [issue](https://github.com/shobrook/statcode/issues/new) and I'll take care of it!
