@@ -247,14 +247,22 @@ def output_without_ui(content):
     text = ("\n".join(text.decode("utf-8") for text in canvas.text)).rstrip()
     print(text)
 
-def generate_content(status_code):
+def get_content(code_descriptions, status_code):
     try:
-        code_descriptions, num, status_code = get_yaml_dictionary(status_code)
         if type(status_code) is not int:
             # Do a case insensitive key comparison for HTTP header values
             content = [code_descriptions[key] for key in code_descriptions if key.lower() == status_code.lower()][0]
         else:
             content = code_descriptions[status_code]
+        return content
+    except (KeyError, IndexError):  # IndexError is due to looking for an invalid key
+        raise KeyError
+
+def generate_content(status_code):
+    try:
+        code_descriptions, num, status_code = get_yaml_dictionary(status_code)
+        content = get_content(code_descriptions, status_code)
+
         pile = urwid.Pile([
             urwid.Text("STATCODE: The Manual for HTTP Status Codes and Headers\n", align="center"),
             urwid.Text(("title", "STATUS MESSAGE" if num else "HEADER INFO")),
@@ -271,7 +279,7 @@ def generate_content(status_code):
         padding = urwid.Padding(Scrollable(pile), left=1, right=1)
 
         return padding
-    except KeyError:  # None is used to print "not recognized", so KeyError. Other errors have nothing to do with it
+    except (KeyError):  # None is used to print "not recognized", so KeyError. Other errors have nothing to do with it
         return None
 
 def __load_file_data(num):
