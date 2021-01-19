@@ -8,7 +8,7 @@ setup(
     name="statcode",
     description="Like man pages, but for HTTP status codes",
     version="v2.0.0",
-    install_requires=["pyyaml", "urwid"],
+    install_requires=["pyyaml", "urwid", "docopt"],
     packages=["statcode"],
     entry_points={"console_scripts": ["statcode = statcode.statcode:main"]},
     include_package_data=True,
@@ -16,5 +16,5 @@ setup(
     url="https://github.com/shobrook/statcode",
     author="shobrook",
     author_email="shobrookj@gmail.com",
-    license="MIT"
+    license="MIT",
 )

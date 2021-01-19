@@ -9,6 +9,7 @@ import shutil
 
 import yaml
 import urwid
+from docopt import docopt
 from urwid.widget import BOX, FLOW, FIXED
 
 
@@ -34,6 +35,42 @@ RED = "\033[31m" if is_not_dumb else ''
 BOLD = '\033[1m' if is_not_dumb else ''
 UNDERLINE = '\033[4m' if is_not_dumb else ''
 END = "\033[0m" if is_not_dumb else ''
+
+usage = """
+Man pages for HTTP status codes
+
+Usage:
+  statcode [-n] [-H]
+  statcode [-n] <query>
+  statcode (-h | --help)
+  statcode --version
+
+Options:
+  -h --help    Show this screen
+  -n --no-ui   output without UI
+  -H --HEADER  Default behavior is to list all status
+               codes. If -H is specified, statcode will
+               list all headers.
+
+* <query> refers to either an HTTP status code or header.
+
+Examples:
+
+list all status codes:
+--
+  $ statcode
+
+list all headers:
+--
+  $ statcode -H
+
+show info for specific <query>:
+--
+  $ statcode 200
+
+  $ statcode Accept-Charset
+
+"""
 
 class Scrollable(urwid.WidgetDecoration):
     # TODO: Fix scrolling behavior (works with up/down keys, not with cursor) <--- Now works with mouse though
@@ -303,14 +340,15 @@ def print_help():
     print(''.join([BOLD, "-a,-l, --all,--list headers", END, " prints all headers in compact version"]))
     print(''.join([BOLD, "-n, --no-ui", END, " force output without UI"]))
 
-def print_all(status_code):
-    if status_code == "statuscode":
-        code_descriptions, num, status_code = get_yaml_dictionary(200)
-    else:
+def print_all(header=False):
+    if header:
         code_descriptions, num, status_code = get_yaml_dictionary("Accept")
+    else:
+        code_descriptions, num, status_code = get_yaml_dictionary(200)
+
     del status_code
     for k, v in code_descriptions.items():
-        print(''.join([RED, str(k), ':', END, " ", v["message"] if num else ""]))
+        print("".join([RED, str(k), ":", END, " ", v["message"] if num else ""]))
 
 
 ######
@@ -319,31 +357,26 @@ def print_all(status_code):
 
 
 def main():
-    if len(sys.argv) == 1 or sys.argv[1].lower() in ("-h", "--help"):
-        print_help()
-    elif sys.argv[1].lower() in ("-a", "-l", "--all", "--list"):
-        try:
-            status_code = sys.argv[2]
-            if status_code not in ("statuscode", "headers"):
-                print(''.join([BOLD, "Wrong parameter for this usage, see help", END]))
-                return
-            print_all(status_code)
-        except IndexError:
-            print_help()
+    arguments = docopt(usage, version="statcode 2.0.0")
+
+    if not arguments["<query>"]:
+        print_all(arguments["--HEADER"])
+        sys.exit(0)
+
     else:
-        status_code = sys.argv[1]
-        without_ui = len(sys.argv) > 2 and sys.argv[2].lower() in ("-n", "--no-ui")
+        status_code = arguments["<query>"]
+        without_ui = arguments["--no-ui"]
         content = generate_content(status_code)
 
-        if content:
-            if without_ui or not is_not_dumb:
-                output_without_ui(content)
-            else:
-                try:
-                    App(content)  # Opens interface
-                except NameError:
-                    output_without_ui(content)
+    if content:
+        if without_ui or not is_not_dumb:
+            output_without_ui(content)
         else:
-            print(''.join([RED, "Sorry, statcode doesn't recognize: ", status_code, END]))
+            try:
+                App(content)  # Opens interface
+            except NameError:
+                output_without_ui(content)
+    else:
+        print("".join([RED, "Sorry, statcode doesn't recognize: ", status_code, END]))
 
     return
